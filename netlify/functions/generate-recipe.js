@@ -9,6 +9,10 @@ exports.handler = async (event, context) => {
     if (event.httpMethod !== "POST" || !event.body) {
         return { 
             statusCode: 405, 
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS"
+            },
             body: JSON.stringify({ error: "Method Not Allowed" }) 
         };
     }
@@ -18,7 +22,14 @@ exports.handler = async (event, context) => {
         const userQuery = data.query ? data.query.toLowerCase() : ''; 
 
         if (!userQuery) {
-            return { statusCode: 400, body: JSON.stringify({ error: "Missing query parameter." }) };
+            return { 
+                statusCode: 400, 
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "POST, OPTIONS"
+                },
+                body: JSON.stringify({ error: "Missing query parameter." }) 
+            };
         }
 
         // 2. CONVERSION LIMIT CHECK (Monetization Protocol)
@@ -44,7 +55,11 @@ exports.handler = async (event, context) => {
             `;
             return {
                 statusCode: 200,
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "POST, OPTIONS"
+                },
                 body: JSON.stringify({ recipe: upgradeMessage })
             };
         }
@@ -64,12 +79,23 @@ exports.handler = async (event, context) => {
         // 4. RETURN RESPONSE: Send the generated content back to the website.
         return {
             statusCode: 200,
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS"
+            },
             body: JSON.stringify({ recipe: generatedRecipe })
         };
 
     } catch (error) {
         console.error("API Error:", error);
-        return { statusCode: 500, body: JSON.stringify({ error: "Failed to process request." }) };
+        return { 
+            statusCode: 500, 
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS"
+            },
+            body: JSON.stringify({ error: "Failed to process request." }) 
+        };
     }
 };
