@@ -1,0 +1,13 @@
+# netlify.toml
+
+[functions]
+  # Apply CORS headers to all deployed functions
+  external_node_modules = [""] # Ensures minimal dependencies for function speed
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/.netlify/functions/*"  # Targets all serverless functions
+  [headers.values]
+    Access-Control-Allow-Origin = "*" # Crucial: Allows any site (your Squarespace page) to talk to the function
+    Access-Control-Allow-Methods = "POST"
+    Access-Control-Allow-Headers = "Content-Type"
