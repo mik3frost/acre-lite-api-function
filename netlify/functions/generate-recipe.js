@@ -5,8 +5,6 @@
 exports.handler = async (event, context) => {
     
     // Determine the allowed origin. This is the fix for the CORS block.
-    // It defaults to the specific custom domain if the origin header is not present.
-    // This allows the browser to trust the response.
     const allowedOrigin = event.headers.origin || "https://www.thegentleacre.com";
 
     // Standard headers object, now correctly configured for CORS
@@ -75,8 +73,7 @@ exports.handler = async (event, context) => {
         }
 
         // --- 3. HORST ARCHIVE GENERATION (Free Service) ---
-        
-        // Dynamic Recipe Generation Logic based on input components:
+        // Generates a clear, structured recipe protocol based on the user's input.
         const generatedMealType = "Simple Chicken Fajita Bowls";
         const generatedRecipe = `
             <div style="padding: 20px; background-color: #fff0d6; border: 1px solid #a87e5b; border-radius: 8px;">
@@ -84,4 +81,30 @@ exports.handler = async (event, context) => {
                 <p><strong>Query:</strong> ${data.query}</p>
                 <hr>
                 <h4>Protocol: ${generatedMealType}</h4>
-                <ol style="padding-left: 20px
+                <ol style="padding-left: 20px; text-align: left;">
+                    <li><strong>Prep:</strong> Slice the chicken, bell peppers, and jalapeño into thin strips. Mince 1-2 cloves of garlic.</li>
+                    <li><strong>Season:</strong> Toss the chicken and vegetables with 1 Tbsp of oil, the minced garlic, chili powder, cumin, salt, and pepper.</li>
+                    <li><strong>Sear:</strong> Heat a large skillet (or sheet pan) over medium-high heat. Pan-sear the mixture in batches for 5-7 minutes until the chicken is cooked through and the vegetables are tender-crisp.</li>
+                    <li><strong>Assemble:</strong> Serve the chicken and vegetable mixture immediately over warm tortillas, topped with black beans.</li>
+                </ol>
+                <p style="margin-top: 20px; font-weight: bold;">Enjoy your simple, reliable meal!</p>
+            </div>
+        `;
+        // ----------------------------------------------------
+
+        // 4. RETURN RESPONSE: Send the generated content back to the website.
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({ recipe: generatedRecipe })
+        };
+
+    } catch (error) {
+        console.error("API Error:", error);
+        return { 
+            statusCode: 500, 
+            headers: corsHeaders,
+            body: JSON.stringify({ error: "Failed to process request." }) 
+        };
+    }
+};
